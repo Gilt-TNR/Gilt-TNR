@@ -353,7 +353,7 @@ def optimize_Rp(U, S, pars, **kwargs):
     gilt_eps = pars["gilt_eps"]
     ratio = S/gilt_eps
     weight = ratio**2/(1+ratio**2)
-    tp = t.multiply_diag(weight, 0, direction="right")
+    tp = t.multiply_diag(weight, 0, direction="left")
     Rp = build_Rp(U, tp)
 
     # Recursively keep absorbing Rp into U, and repeating the procedure
