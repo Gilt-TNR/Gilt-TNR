@@ -4,3 +4,6 @@
 [submodule "tensors"]
 	path = tensors
 	url = https://github.com/mhauru/tensors
+[submodule "tntools"]
+	path = tntools
+	url = https://github.com/mhauru/tntools
