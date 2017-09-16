@@ -3,6 +3,8 @@ import logging
 import itertools as itt
 from ncon import ncon
 
+version = 1.0
+
 # Threshold for when the recursive iteration of Gilt is considered to
 # have converged.
 convergence_eps = 1e-2
