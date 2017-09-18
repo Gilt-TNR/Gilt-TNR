@@ -1358,9 +1358,12 @@ def optimize_Rp(U, S, pars, **kwargs):
 
     # The following minimizes ((t-tp)*S).norm_sq() + gilt_eps*tp.norm_sq()
     gilt_eps = pars["gilt_eps"]
-    ratio = S/gilt_eps
-    weight = ratio**2/(1+ratio**2)
-    tp = t.multiply_diag(weight, 0, direction="left")
+    if gilt_eps != 0:
+        ratio = S/gilt_eps
+        weight = ratio**2/(1+ratio**2)
+        tp = t.multiply_diag(weight, 0, direction="left")
+    else:
+        tp = t
     Rp = build_Rp(U, tp)
 
     # Recursively keep absorbing Rp into U, and repeating the procedure
