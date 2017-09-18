@@ -115,6 +115,8 @@ if __name__ == "__main__":
             dbname, "As", pars, iter_count=it
         )
         As, log_facts = res[0], res[1]
+        if log_facts == 0:
+            log_facts = [0]*8
 
         if pars["print_spectra"]:
             es = get_A_spectrum(As)

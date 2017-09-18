@@ -194,7 +194,7 @@ def print_envspec(S):
     envspeclist = sorted(S.to_ndarray(), reverse=True)
     envspeclist = envspeclist[0:-1:step]
     envspeclist = np.array(envspeclist)
-    msg = "The correlation spectrum, with step {} in {}".format(step, l)
+    msg = "The environment spectrum, with step {} in {}".format(step, l)
     logging.info(msg)
     logging.info(envspeclist)
     return
@@ -396,16 +396,4 @@ def optimize_Rp(U, S, pars, **kwargs):
 def build_Rp(U, tp):
     Rp = ncon((U.conjugate(), tp), ([-1,-2,1], [1]))
     return Rp
-
-
-def print_envspec(S):
-    """ Print out the environment spectrum S. """
-    l = len(S)
-    step = int(np.ceil(l/100))
-    envspeclist = sorted(S.to_ndarray(), reverse=True)
-    envspeclist = envspeclist[0:-1:step]
-    envspeclist = np.array(envspeclist)
-    msg = "The correlation spectrum, with step {} in {}".format(step, l)
-    logging.info(msg)
-    logging.info(envspeclist)
 

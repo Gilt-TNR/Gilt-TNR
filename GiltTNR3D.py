@@ -203,7 +203,7 @@ def gilt_step(As, pars):
     if len(As) == 4:
         As = As + As
 
-    if pars["gilt_eps"] >= 0:
+    if pars["gilt_eps_squares"] >= 0 or pars["gilt_eps_cubes"] >= 0:
         if pars["verbosity"] > 0:
             status_print("Applying Gilt, starting.")
             orig_shps = [get_A_shape(As, None, i) for i in range(8)]
@@ -1360,7 +1360,7 @@ def optimize_Rp(U, S, pars, **kwargs):
     gilt_eps = pars["gilt_eps"]
     ratio = S/gilt_eps
     weight = ratio**2/(1+ratio**2)
-    tp = t.multiply_diag(weight, 0, direction="right")
+    tp = t.multiply_diag(weight, 0, direction="left")
     Rp = build_Rp(U, tp)
 
     # Recursively keep absorbing Rp into U, and repeating the procedure
@@ -1416,7 +1416,7 @@ def print_envspec(S):
     envspeclist = sorted(S.to_ndarray(), reverse=True)
     envspeclist = envspeclist[0:-1:step]
     envspeclist = np.array(envspeclist)
-    msg = "The correlation spectrum, with step {} in {}".format(step, l)
+    msg = "The environment spectrum, with step {} in {}".format(step, l)
     logging.info(msg)
     logging.info(envspeclist)
 
