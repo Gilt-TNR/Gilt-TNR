@@ -66,7 +66,7 @@ def gilttnr_step(A, log_fact, pars, **kwargs):
         log_fact += np.log(m)
 
     # Apply Gilt.
-    if pars["gilt_eps"] > 0:
+    if pars["gilt_eps"] >= 0:
         A1, A2 = gilt_plaq(A, A, pars)
     else:
         A1, A2, = A, A
