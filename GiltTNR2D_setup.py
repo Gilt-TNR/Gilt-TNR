@@ -18,7 +18,11 @@ parinfo = {
         "default": None,
         "idfunc":  lambda dataname, pars: bool(pars["gilt_eps_list"])
     },
-    "gilt_print_corspec": {
+    "gilt_print_envspec": {
+        "default": False,
+        "idfunc":  lambda dataname, pars: False
+    },
+    "gilt_print_envspec_recursive": {
         "default": False,
         "idfunc":  lambda dataname, pars: False
     },

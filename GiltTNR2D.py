@@ -35,6 +35,14 @@ def gilttnr_step(A, log_fact, pars, **kwargs):
     The threshold for how small singular values are considered "small
     enough" in Gilt, which determines the amount of truncation done.
 
+    gilt_print_envspec and gilt_print_envspec_recursive:
+    Whether to print the environment spectra in the logs. The _recursive
+    determines the same thing, but specifically for the repeated
+    applications of Gilt on the same leg.  In other words, if
+    gilt_print_envspec=True but gilt_print_envspec_recursive=False, then
+    the environment spectrum is only printed when we first start Gilting
+    a leg.
+
     cg_chis:
     An iterable of integers, that lists the possible bond dimensions
     to which TRG is allowed to truncate.
@@ -264,6 +272,8 @@ def apply_gilt(A1, A2, pars, where=None):
     """
     U, S = get_envspec(A1, A2, pars, where=where)
     S /= S.sum()
+    if pars["gilt_print_envspec"]:
+        print_envspec(S)
     Rp, insertionerr = optimize_Rp(U, S, pars)
     spliteps = pars["gilt_eps"]*1e-3
     Rp1, s, Rp2, spliterr = Rp.split(0, 1, eps=spliteps, return_rel_err=True,
@@ -374,6 +384,8 @@ def optimize_Rp(U, S, pars, **kwargs):
         UuvsS = Uuvs.multiply_diag(S, 2, direction="left")
         Uinner, Sinner = UuvsS.svd([0,1], [2])[0:2]
         Sinner /= Sinner.sum()
+        if pars["gilt_print_envspec"] and pars["gilt_print_envspec_recursive"]:
+            print_envspec(Sinner)
         Rpinner = optimize_Rp(Uinner, Sinner, pars)[0]
         Rp = ncon((Rpinner, us, vs), ([1,2], [-1,1], [2,-2]))
 
@@ -384,4 +396,16 @@ def optimize_Rp(U, S, pars, **kwargs):
 def build_Rp(U, tp):
     Rp = ncon((U.conjugate(), tp), ([-1,-2,1], [1]))
     return Rp
+
+
+def print_envspec(S):
+    """ Print out the environment spectrum S. """
+    l = len(S)
+    step = int(np.ceil(l/100))
+    envspeclist = sorted(S.to_ndarray(), reverse=True)
+    envspeclist = envspeclist[0:-1:step]
+    envspeclist = np.array(envspeclist)
+    msg = "The correlation spectrum, with step {} in {}".format(step, l)
+    logging.info(msg)
+    logging.info(envspeclist)
 

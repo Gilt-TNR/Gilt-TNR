@@ -68,6 +68,10 @@ parinfo = {
         "default": False,
         "idfunc":  lambda dataname, pars: False
     },
+    "gilt_print_envspec_recursive": {
+        "default": False,
+        "idfunc":  lambda dataname, pars: False
+    },
 
     # Parameters for the coarse-graining.
     "cg_chis": {

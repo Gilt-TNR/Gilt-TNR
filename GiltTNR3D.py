@@ -4,7 +4,7 @@ import functools as fct
 import operator as opr
 import itertools as itt
 import logging
-from ncon_sparseeig import ncon_sparsesvd
+from tntools.ncon_sparseeig import ncon_sparsesvd
 from ncon import ncon
 from scipy.sparse.linalg.eigen.arpack.arpack import (
     ArpackNoConvergence, ArpackError
@@ -14,9 +14,9 @@ version = "0.1"
 
 # Threshold for when the recursive iteration of Gilt is considered to
 # have converged.
-global_eps = 1e-2
+convergence_eps = 1e-2
 
-def gilttnr_step(As, log_fact, pars, **kwargs):
+def gilttnr_step(As, log_facts, pars, **kwargs):
     """
     Apply a full step of Gilt-TNR to a cubical lattice.
     The lattice consists of a unit cube that is repeated:
@@ -126,9 +126,13 @@ def gilttnr_step(As, log_fact, pars, **kwargs):
     even trying all the culgs, if it seems that no more truncations are
     probably possible.
 
-    gilt_print_envspec:
-    Boolean for whether to print out the environment spectrum during
-    Gilt.
+    gilt_print_envspec and gilt_print_envspec_recursive:
+    Whether to print the environment spectra in the logs. The _recursive
+    determines the same thing, but specifically for the repeated
+    applications of Gilt on the same leg.  In other words, if
+    gilt_print_envspec=True but gilt_print_envspec_recursive=False, then
+    the environment spectrum is only printed when we first start Gilting
+    a leg.
 
     cg_chis:
     An iterable of integers, that lists the possible bond dimensions
@@ -884,9 +888,9 @@ def gilt_culg(As, culg, pars, square=False, Rps=None):
     As = permute_As(As, cube=cube, Rps=Rps)
 
     if square:
-        As, done, err = apply_gilt_squares(As_mod, pars, leg=leg, Ms=Rps)
+        As, done, err = apply_gilt_squares(As, pars, leg=leg, Rps=Rps)
     else:
-        As, done, err = apply_gilt_cubes(As_mod, pars, leg=leg, Rps=Rps)
+        As, done, err = apply_gilt_cubes(As, pars, leg=leg, Rps=Rps)
 
     # Reverse permutation.
     As = permute_As(As, cube=cube, inverse=True, Rps=Rps)
@@ -1107,7 +1111,8 @@ def apply_gilt_FNenv(env, Aright, Aleft, pars, Rps=None):
     Rp1, s, Rp2, spliterr = Rp.split(0, 1, eps=spliteps, return_rel_err=True,
                                      return_sings=True)
     Rp2 = Rp2.transpose()
-    if (s-1).abs().max() < global_eps:
+    global convergence_eps
+    if (s-1).abs().max() < convergence_eps:
         done = True
     else:
         done = False
@@ -1152,7 +1157,7 @@ def apply_gilt_cubes(As, pars, leg=None, Rps=None):
         # Use fancy splittings to try to contract the environment faster.
         env = build_gilt_split_cube(FSW, FSE, FNW, FNE, BSW, BSE, BNW, BNE,
                                     pars)
-    if not pars["gilt_split"] or cube is None:
+    if not pars["gilt_split"] or env is None:
         # If env is None, then splitting was attempted but aborted.
         # Just contract the environment.
         # Cost: O(chi^12)
@@ -1332,7 +1337,7 @@ def build_gilt_split_cube(FSW, FSE, FNW, FNE, BSW, BSE, BNW, BNE, pars):
 #--- Part 3: Building an optimal Rp, given an environment. ---#
 
 
-def build_optimal_Rp(U, S, pars, **kwargs): 
+def optimize_Rp(U, S, pars, **kwargs):
     """
     Given the environment spectrum S and the singular vectors U, choose
     t' and build the matrix R' (called tp and Rp in the code).
@@ -1374,6 +1379,8 @@ def build_optimal_Rp(U, S, pars, **kwargs):
         UuvsS = Uuvs.multiply_diag(S, 2, direction="left")
         Uinner, Sinner = UuvsS.svd([0,1], [2])[0:2]
         Sinner /= Sinner.sum()
+        if pars["gilt_print_envspec"] and pars["gilt_print_envspec_recursive"]:
+            print_envspec(Sinner)
         Rpinner = optimize_Rp(Uinner, Sinner, pars)[0]
         Rp = ncon((Rpinner, us, vs), ([1,2], [-1,1], [2,-2]))
 
