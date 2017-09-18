@@ -10,4 +10,4 @@ cg_eps: !!float 1e-5
 gilt_eps: !!float 1e-6
 gilt_print_envspec: true
 debug: True
-database: "../../data/TNS2D/"
+database: "../../data/GiltTNR2D/"

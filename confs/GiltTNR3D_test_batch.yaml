@@ -13,4 +13,4 @@ symmetry_tensors: True
 print_spectra: True
 print_free_energy: True
 debug: True
-database: "../../data/TNS3D/"
+database: "../../data/GiltTNR3D/"
