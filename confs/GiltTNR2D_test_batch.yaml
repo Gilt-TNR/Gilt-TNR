@@ -1,0 +1,13 @@
+model: ising
+beta: 0.44068679350977147
+print_free_energy: True
+print_scaldims: 50
+print_spectra: True
+iters: !!python/object/apply:builtins.range [0, 9, 1]
+symmetry_tensors: True
+cg_chis: !!python/object/apply:builtins.range [0, 21, 1]
+cg_eps: !!float 1e-5
+gilt_eps: !!float 1e-6
+gilt_print_envspec: true
+debug: True
+database: "../../data/TNS2D/"
