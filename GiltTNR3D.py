@@ -1047,6 +1047,13 @@ def apply_gilt_squares(As, pars, leg=None, Rps=None):
 
 
 def apply_gilt_squares_FN(As, pars, envtype, Rps=None):
+    env = build_gilt_square_env(As, pars, envtype)
+    As[7], As[3], done, err = apply_gilt_FNenv(env, As[7], As[3],
+                                               pars, Rps=Rps)
+    return As, done, err
+
+
+def build_gilt_square_env(As, pars, envtype):
     # Construct the environment, depending on which type has been
     # chosen.
     if envtype=="horz_across":
@@ -1088,11 +1095,10 @@ def apply_gilt_squares_FN(As, pars, envtype, Rps=None):
                    ([5,6,1,2], [9,10,1,2],
                     [-1,-11,5,6,7,8], [-2,-12,9,10,11,12],
                     [7,8,3,4], [11,12,3,4]))
-
-    # Apply Gilt to this environment.
-    As[7], As[3], done, err = apply_gilt_FNenv(env, As[7], As[3],
-                                               pars, Rps=Rps)
-    return As, done, err
+    else:
+        msg = "Unknown envtype {}.".format(pars["envtype"])
+        raise ValueError(msg)
+    return env
 
 
 def apply_gilt_FNenv(env, Aright, Aleft, pars, Rps=None):
