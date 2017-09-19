@@ -8,6 +8,5 @@ symmetry_tensors: True
 cg_chis: !!python/object/apply:builtins.range [0, 21, 1]
 cg_eps: !!float 1e-5
 gilt_eps: !!float 1e-6
-gilt_print_envspec: true
+gilt_print_envspec: False
 debug: True
-database: "../../data/GiltTNR2D/"

@@ -7,10 +7,8 @@ cg_chis: !!python/object/apply:builtins.range [0, 10, 1]
 gilt_eps_squares: !!float 1e-4
 gilt_eps_cubes: !!float 1e-4
 gilt_hastyquit: True
-gilt_squares: True
-gilt_print_envspec: True
+gilt_print_envspec: False
 symmetry_tensors: True
 print_spectra: True
 print_free_energy: True
 debug: True
-database: "../../data/GiltTNR3D/"
