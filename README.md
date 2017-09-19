@@ -18,6 +18,7 @@ For any questions or comments, please email Markus Hauru at markus@mhauru.org.
 
 ## Installation
 First of all, you need Python 3 and a recent version of scipy and numpy.
+(The code has been tested with Python 3.5.3, scipy 0.18.1 and numpy 1.12.1.)
 An easy way to get these running is to use a scientific Python distribution, such as anaconda: https://www.anaconda.com/download/
 
 Once you have Python running, you need to fetch this repository.
