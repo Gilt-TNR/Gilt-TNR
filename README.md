@@ -2,7 +2,7 @@
 This repository includes Python 3 implementations of the Gilt-TNR algorithm for different lattices.
 The Gilt-TNR algorithm is described in an upcoming publication.
 The implementations in this repository may remain under development, and no permanence is guaranteed.
-For code that is guaranteed to reproduce the results in the afore-mentioned paper, see the ancillary files of the arxiv submission.
+For code that is guaranteed to reproduce the results in the aforementioned paper, see the ancillary files of the arxiv submission.
 
 The square lattice version of Gilt-TNR is implemented in GiltTNR2D.py.
 This implementation is fully functional and produces accurate physical observables for the models we have tested it on.
@@ -64,3 +64,7 @@ These files use the YAML format.
 Parameters in a configuration file can be appended or overriden by providing more command line arguments after the `-y` flag.
 Each argument should be a string, that could be added as a line to the YAML file.
 The various parameters that can be used are defined in the beginning of the scripts and in the docstrings in the main algorithm files.
+
+The code makes significant use of lower level tools from the three packages that it has as submodules: `tensors`, `ncon` and `tntools`. `tensors` is a library for implementing basic tensor operations, such as decompositions and contractions. The key benefit over numpy's `ndarray`s (which it uses under the hood) is that `tensors` supports tensors with internal Abelian symmetries (see https://arxiv.org/abs/1008.4774). `ncon` is a Python implementation of the NCon function, as described here: https://arxiv.org/abs/1402.0939. `tntools` is a collection of miscellaneous tools useful when working with tensor network algorithms. See the repositories themselves for more documentation.
+
+Note that all the actual running of the coarse-graining algorithms, and generating coarse-grained tensors, happens using a module called `tntools.datadispenser`. The user interface is mainly through the function `datadispenser.get_data`, for which usage examples can be seen in the `_test.py` and `_envspec.py` scripts. The idea is that the user specifies the type of data (typically just `A`, which is used as the name for coarse-grained tensors as in the paper, or `As` for the algorithms were several A tensors are needed, such as GiltTNR3D) and the parameters for creating this data (in a dictionary). `datadispenser` then generates this data, and stores it on disk, so that the next time the same data is requested, `datadispenser` just finds it on the disk and returns it from there. Note that if one edits the code, either the old data should be purged, or the version number of the algorithm should be changed, so that `datadispenser` knows the regenerate all data that is requested. See the docstring for `datadispenser` and its functions for more details.
