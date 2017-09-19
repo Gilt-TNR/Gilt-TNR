@@ -14,29 +14,24 @@ parinfo = {
     "gilt_eps_cubes": {
         "default": 1e-4,
         "idfunc":  (lambda dataname, pars:
-                    pars["gilt_cubes"] and not bool(pars["gilt_eps_cubes_list"]))
+                    pars["gilt_eps_cubes"] >= 0
+                    and not bool(pars["gilt_eps_cubes_list"]))
     },
     "gilt_eps_cubes_list": {
         "default": None,
-        "idfunc":  (lambda dataname, pars:
-                    pars["gilt_cubes"] and bool(pars["gilt_eps_cubes_list"]))
+        "idfunc":  lambda dataname, pars: bool(pars["gilt_eps_cubes_list"])
     },
     "gilt_eps_squares": {
         "default": 1e-4,
         "idfunc":  (lambda dataname, pars:
-                    pars["gilt_squares"]
+                    pars["gilt_eps_squares"] >= 0
                     and not bool(pars["gilt_eps_squares_list"]))
     },
     "gilt_eps_squares_list": {
         "default": None,
-        "idfunc":  (lambda dataname, pars:
-                    pars["gilt_squares"] and bool(pars["gilt_eps_squares_list"]))
+        "idfunc":  lambda dataname, pars: bool(pars["gilt_eps_squares_list"])
     },
     "gilt_squares": {
-        "default": True,
-        "idfunc":  lambda dataname, pars: True
-    },
-    "gilt_cubes": {
         "default": True,
         "idfunc":  lambda dataname, pars: True
     },

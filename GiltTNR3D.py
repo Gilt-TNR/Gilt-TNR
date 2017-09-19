@@ -88,17 +88,12 @@ def gilttnr_step(As, log_facts, pars, **kwargs):
 
 
     The Gilt-TNR 3D algorithm takes the following parameters:
-    gilt_squares:
-    Boolean for whether to apply Gilt with squares as the neighborhoods.
-
-    gilt_cubes:
-    Boolean for whether to apply Gilt with cubes as the neighborhoods.
-
     gilt_eps_cubes and gilt_eps_squares:
     The threshold for how small singular values are considered "small
     enough" in Gilt, which determines the amount of truncation done.
     One is for when applying Gilt with cubes as the neighborhoods,
-    the other for squares.
+    the other for squares. If eps < 0, the whole gilt procedure for
+    this environment type is skipped.
 
     gilt_split:
     Boolean for whether to, when applying Gilt to cubes, use a sparse
@@ -1134,7 +1129,15 @@ def apply_gilt_cubes(As, pars, leg=None, Rps=None):
     # Permute and rotate the tensors, so that they are arranged as if
     # leg="FN".
     As = permute_As(As, leg=leg, Rps=Rps)
+    env = build_gilt_cube_env(As, pars)
+    As[7], As[3], done, err = apply_gilt_FNenv(env, As[7], As[3], pars,
+                                               Rps=Rps)
+    # Invert the permutations done in the beginning.
+    As = permute_As(As, leg=leg, inverse=True, Rps=Rps)
+    return As, done, err
 
+
+def build_gilt_cube_env(As, pars):
     #COST: 8chi^9
     FNW = ncon((As[3], As[3].conjugate()),
                ([1,2,-1,-11,3,-111], [1,2,-2,-12,3,-112]))
@@ -1155,8 +1158,8 @@ def apply_gilt_cubes(As, pars, leg=None, Rps=None):
 
     if pars["gilt_split"]:
         # Use fancy splittings to try to contract the environment faster.
-        env = build_gilt_split_cube(FSW, FSE, FNW, FNE, BSW, BSE, BNW, BNE,
-                                    pars)
+        env = build_gilt_cube_env_split(FSW, FSE, FNW, FNE, BSW, BSE, BNW, BNE,
+                                        pars)
     if not pars["gilt_split"] or env is None:
         # If env is None, then splitting was attempted but aborted.
         # Just contract the environment.
@@ -1171,16 +1174,10 @@ def apply_gilt_cubes(As, pars, leg=None, Rps=None):
                     [11,12,17,18,13,14], [21,22,17,18,19,20]),
                    order=([5,6,17,18,15,16,13,14,19,20,21,22,3,4,11,12,7,8,9,
                            10,1,2]))
-
-    As[7], As[3], done, err = apply_gilt_FNenv(env, As[7], As[3], pars,
-                                               Rps=Rps)
-
-    # Invert the permutations done in the beginning.
-    As = permute_As(As, leg=leg, inverse=True, Rps=Rps)
-    return As, done, err
+    return env
 
 
-def build_gilt_split_cube(FSW, FSE, FNW, FNE, BSW, BSE, BNW, BNE, pars):
+def build_gilt_cube_env_split(FSW, FSE, FNW, FNE, BSW, BSE, BNW, BNE, pars):
     """ Build the environment from the cube, but instead of doing a
     straight-forward contraction of the environment, contract parts of,
     split those parts into pieces with an SVD, and contract the pieces.
