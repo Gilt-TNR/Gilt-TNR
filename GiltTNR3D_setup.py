@@ -31,10 +31,6 @@ parinfo = {
         "default": None,
         "idfunc":  lambda dataname, pars: bool(pars["gilt_eps_squares_list"])
     },
-    "gilt_squares": {
-        "default": True,
-        "idfunc":  lambda dataname, pars: True
-    },
     "gilt_split": {
         "default": True,
         "idfunc":  lambda dataname, pars: True
