@@ -5,11 +5,11 @@ The implementations in this repository may remain under development, and no perm
 For code that is guaranteed to reproduce the results in the afore-mentioned paper, see the ancillary files of the arxiv submission.
 
 The square lattice version of Gilt-TNR is implemented in GiltTNR2D.py.
-The implementation is fully functional and produces accurate physical observables for the models we have tested it on.
+This implementation is fully functional and produces accurate physical observables for the models we have tested it on.
 Further development may or may not happen.
 
 Work for a cubical lattice version is ongoing in GiltTNR3D.py
-The code is a run runnable state, and it tries to perform a Gilt-TNR step on a given model.
+The code is in a runnable state, and it tries to perform a Gilt-TNR step on a given model.
 However, bugs are still possible, even probable, performance needs significant improvement, and the design of the algorithm may still change.
 
 All the source code is licensed under the MIT license, as described in the file LICENSE.
