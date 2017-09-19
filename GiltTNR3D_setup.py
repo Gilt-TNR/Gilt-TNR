@@ -37,19 +37,22 @@ parinfo = {
     },
     "gilt_split_factor": {
         "default": 1.,
-        "idfunc":  lambda dataname, pars: True
+        "idfunc":  lambda dataname, pars: (pars["gilt_split"] and
+                                           not pars["gilt_split_dynamic"])
     },
     "gilt_split_dynamic": {
         "default": True,
-        "idfunc":  lambda dataname, pars: True
+        "idfunc":  lambda dataname, pars: pars["gilt_split"]
     },
     "gilt_split_dynamic_eps": {
         "default": 1e-8,
-        "idfunc":  lambda dataname, pars: pars["gilt_split_dynamic"]
+        "idfunc":  lambda dataname, pars: (pars["gilt_split"]
+                                           and pars["gilt_split_dynamic"])
     },
     "gilt_split_dynamic_max_factor": {
         "default": 2.,
-        "idfunc":  lambda dataname, pars: pars["gilt_split_dynamic"]
+        "idfunc":  lambda dataname, pars: (pars["gilt_split"]
+                                           and pars["gilt_split_dynamic"])
     },
     "gilt_hastyquit": {
         "default": False,
