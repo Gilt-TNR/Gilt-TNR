@@ -1,8 +1,8 @@
 # Gilt-TNR
 This repository includes Python 3 implementations of the Gilt-TNR algorithm for different lattices.
-The Gilt-TNR algorithm is described in an upcoming publication.
+The Gilt-TNR algorithm is described in the arXiv e-print "Renormalization of tensor networks using graph independent local truncations" available at https://arxiv.org/abs/1709.07460.
 The implementations in this repository may remain under development, and no permanence is guaranteed.
-For code that is guaranteed to reproduce the results in the aforementioned paper, see the ancillary files of the arxiv submission.
+For code that is guaranteed to reproduce the results in the aforementioned paper, see the ancillary files of the arXiv submission (directory `anc` in the tarball https://arxiv.org/src/1709.07460).
 
 The square lattice version of Gilt-TNR is implemented in GiltTNR2D.py.
 This implementation is fully functional and produces accurate physical observables for the models we have tested it on.
