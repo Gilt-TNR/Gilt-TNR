@@ -274,17 +274,17 @@ def apply_gilt(A1, A2, pars, where=None):
     S /= S.sum()
     if pars["gilt_print_envspec"]:
         print_envspec(S)
-    Rp, insertionerr = optimize_Rp(U, S, pars)
+    Rp  = optimize_Rp(U, S, pars)
     spliteps = pars["gilt_eps"]*1e-3
-    Rp1, s, Rp2, spliterr = Rp.split(0, 1, eps=spliteps, return_rel_err=True,
-                                     return_sings=True)
+    Rp1, s, Rp2 = Rp.split(0, 1, eps=spliteps, return_rel_err=False,
+                           return_sings=True)
     global convergence_eps
     if (s-1).abs().max() < convergence_eps:
         done = True
     else:
         done = False
 
-    err = insertionerr + spliterr
+    err = gilt_error(U, S, Rp1, Rp2)
     A1, A2 = apply_Rp(A1, A2, Rp1, Rp2, where=where)
     return A1, A2, done, err
 
@@ -353,14 +353,6 @@ def optimize_Rp(U, S, pars, **kwargs):
     t = ncon(U, [1,1,-1])
     S = S.flip_dir(0)   # Necessary for symmetry preserving tensors only.
 
-    C_err_constterm = (t*S).norm()
-    def C_err(tp):
-        nonlocal t, S, C_err_constterm
-        diff = t-tp
-        diff = diff*S
-        err = diff.norm()/C_err_constterm
-        return err
-
     # The following minimizes ((t-tp)*S).norm_sq() + gilt_eps*tp.norm_sq()
     gilt_eps = pars["gilt_eps"]
     if gilt_eps != 0:
@@ -389,11 +381,20 @@ def optimize_Rp(U, S, pars, **kwargs):
         Sinner /= Sinner.sum()
         if pars["gilt_print_envspec"] and pars["gilt_print_envspec_recursive"]:
             print_envspec(Sinner)
-        Rpinner = optimize_Rp(Uinner, Sinner, pars)[0]
+        Rpinner = optimize_Rp(Uinner, Sinner, pars)
         Rp = ncon((Rpinner, us, vs), ([1,2], [-1,1], [2,-2]))
 
-    err = C_err(tp)
-    return Rp, err
+    return Rp
+
+
+def gilt_error(U, S, Rp1, Rp2):
+    t = ncon(U, [1,1,-1])
+    tp = ncon((U, Rp1, Rp2), ([1,2,-1], [1,3], [3,2]))
+    S = S.flip_dir(0)   # Necessary for symmetry preserving tensors only.
+    diff = t-tp
+    diff = diff*S
+    err = diff.norm() / (t*S).norm()
+    return err
     
 
 def build_Rp(U, tp):
