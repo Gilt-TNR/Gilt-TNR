@@ -1,9 +1,0 @@
-[submodule "ncon"]
-	path = ncon
-	url = https://github.com/mhauru/ncon
-[submodule "tensors"]
-	path = tensors
-	url = https://github.com/mhauru/tensors
-[submodule "tntools"]
-	path = tntools
-	url = https://github.com/mhauru/tntools
