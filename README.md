@@ -32,7 +32,7 @@ Similar commands should be available on non-nix systems, if git is available.
 If you do not have git, you can simply download the repository as zip or a tarball.
 You will, however, manually have to download the three libraries that this repository depends on, and place them in the same folder as the main code files, or somewhere where your `PYTHONPATH` environment variable can find them.
 The three repositories you need are:<br>
-https://github.com/mhauru/tensors<br>
+https://github.com/mhauru/abeliantensors/tree/55536461880161c4643f6830aea<br>
 https://github.com/mhauru/ncon<br>
 https://github.com/mhauru/tntools
 
