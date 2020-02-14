@@ -11,4 +11,4 @@ gilt_print_envspec: False
 symmetry_tensors: True
 print_spectra: True
 print_free_energy: True
-debug: True
+debug: False
