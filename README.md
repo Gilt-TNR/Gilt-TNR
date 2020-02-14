@@ -14,27 +14,26 @@ However, bugs are still possible, even probable, performance needs significant i
 
 All the source code is licensed under the MIT license, as described in the file LICENSE.
 
-For any questions or comments, please email Markus Hauru at markus@mhauru.org.
+For any questions or comments, please email Markus Hauru at [markus@mhauru.org](mailto:markus@mhauru.org).
 
 ## Installation
-First of all, you need Python 3 and a recent version of scipy and numpy.
-(The code has been tested with Python 3.5.3, scipy 0.18.1 and numpy 1.12.1.)
-An easy way to get these running is to use a scientific Python distribution, such as anaconda: https://www.anaconda.com/download/
+First of all, you need Python 3. If you don't yet have it installed, an easy way to get started is to use a scientific Python distribution like anaconda: https://www.anaconda.com/download/
 
-Once you have Python running, you need to fetch this repository.
-On a *nix system you can simply run<br>
-```git clone --recursive  https://github.com/Gilt-TNR/Gilt-TNR```<br>
-If you run `git clone` without the `--recursive`, then you'll probably be missing the git submodules that include libraries that the Gilt-TNR algorithm depends on.
-You can get them afterwards by running `git submodule update --init --recursive` in your repository.
+After that, on Linux and Mac installation is as simple as
+```
+git clone https://github.com/Gilt-TNR/Gilt-TNR
+cd Gilt-TNR
+pip install --user -r requirements.txt
+```
+If you are using Windows, or something like anaconda, and don't have pip available, you just need to make sure that
+a) You have the files from this repository. You can `git clone` to get them, or if you don't use git, just click the green "Clone or download" button.
+b) You have installed the packages listed in `requirements.txt`. These are SciPy (the code has been tested with SciPy 0.18.1), [tntools](https://github.com/mhauru/tntools), [ncon](https://github.com/mhauru/ncon), and [abeliantensors](https://github.com/mhauru/abeliantensors).
 
-Similar commands should be available on non-nix systems, if git is available.
-
-If you do not have git, you can simply download the repository as zip or a tarball.
-You will, however, manually have to download the three libraries that this repository depends on, and place them in the same folder as the main code files, or somewhere where your `PYTHONPATH` environment variable can find them.
-The three repositories you need are:<br>
-https://github.com/mhauru/abeliantensors/tree/55536461880161c4643f6830aea<br>
-https://github.com/mhauru/ncon<br>
-https://github.com/mhauru/tntools
+Once you have everything installed, you can check that things work by running for instance
+```
+python3 GiltTNR2D_test.py -c 'confs/GiltTNR2D_test_batch.yaml' -y 'gilt_eps: !!float 1e-7' 'beta: 0.4'
+```
+which should compute the free energy of the Ising model at `beta = 0.4`.
 
 ## A quick guide to the code
 
@@ -65,6 +64,6 @@ Parameters in a configuration file can be appended or overriden by providing mor
 Each argument should be a string, that could be added as a line to the YAML file.
 The various parameters that can be used are defined in the beginning of the scripts and in the docstrings in the main algorithm files.
 
-The code makes significant use of lower level tools from the three packages that it has as submodules: `tensors`, `ncon` and `tntools`. `tensors` is a library for implementing basic tensor operations, such as decompositions and contractions. The key benefit over numpy's `ndarray`s (which it uses under the hood) is that `tensors` supports tensors with internal Abelian symmetries (see https://arxiv.org/abs/1008.4774). `ncon` is a Python implementation of the NCon function, as described here: https://arxiv.org/abs/1402.0939. `tntools` is a collection of miscellaneous tools useful when working with tensor network algorithms. See the repositories themselves for more documentation.
+The code makes significant use of lower level tools from the three packages `abeliantensors`, `ncon`, and `tntools`. `abeliantensors` is a library for implementing basic tensor operations, such as decompositions and contractions. The key benefit over numpy's `ndarray`s (which it uses under the hood) is that `abeliantensors` supports tensors with internal Abelian symmetries (see https://arxiv.org/abs/1008.4774). `ncon` is a Python implementation of the NCon function, as described here: https://arxiv.org/abs/1402.0939. `tntools` is a collection of miscellaneous tools useful when working with tensor network algorithms. See the repositories themselves for more documentation.
 
 Note that all the actual running of the coarse-graining algorithms, and generating coarse-grained tensors, happens using a module called `tntools.datadispenser`. The user interface is mainly through the function `datadispenser.get_data`, for which usage examples can be seen in the `_test.py` and `_envspec.py` scripts. The idea is that the user specifies the type of data (typically just `A`, which is used as the name for coarse-grained tensors as in the paper, or `As` for the algorithms were several A tensors are needed, such as GiltTNR3D) and the parameters for creating this data (in a dictionary). `datadispenser` then generates this data, and stores it on disk, so that the next time the same data is requested, `datadispenser` just finds it on the disk and returns it from there. Note that if one edits the code, either the old data should be purged, or the version number of the algorithm should be changed, so that `datadispenser` knows the regenerate all data that is requested. See the docstring for `datadispenser` and its functions for more details.
